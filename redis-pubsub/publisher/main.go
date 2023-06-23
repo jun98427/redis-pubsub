@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/jun98427/redis-pubsub/pkg/pubsub"
 )
 
@@ -18,10 +22,9 @@ func main() {
 	for {
 		var msg string
 		fmt.Print("Enter message: ")
-		_, err := fmt.Scanln(&msg)
-		if err != nil {
-			return
-		}
+		r := bufio.NewReader(os.Stdin)
+		msg, _ = r.ReadString('\n')
+		msg = strings.Replace(msg, "\n", "", -1)
 
 		err = client.Publish(context.Background(), topic, msg).Err()
 		if err != nil {
